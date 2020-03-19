@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    tty: true
+    ports:
+        - 3000:3000
+    volumes:
+        - .:/var/www
+        - /var/www/node_modules
