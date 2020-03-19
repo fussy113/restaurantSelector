@@ -1,0 +1,29 @@
+name: Check code using lint and test
+on:
+  # プルリクエストが作成、もしくはcommitが更新されたら実行するワークフロー
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  run_lint_and_test:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node: [ '13.10.1' ]
+    timeout-minutes: 300
+    steps:
+      - name: checkout pushed commit
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: run lint
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - run: yarn install
+      - run: yarn lint
+      - name: run test
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - run: yarn test
